@@ -1,9 +1,9 @@
-from flask import Flask
+from flask import Flask, jsonify
 from os import environ
 from pymongo import MongoClient
 import requests
-import json
 from datetime import datetime, timedelta
+import time
 
 app = Flask(__name__)
 listen_port = environ.get("HTTP_PORT")
@@ -26,18 +26,18 @@ def connect_database():
     return client[db_name]
 
 def update_weather_data(db):
-    while true:
-    weather_data=retrieve_weather_data()
-    store_weather_data(db, weather_data)
-    sleep(update_interval)
+    while True:
+        weather_data=retrieve_weather_data()
+        store_weather_data(db, weather_data)
+        time.sleep(update_interval)
 
 def retrieve_weather_data():
     api_key="7050ff93230770172103ab380dbcc811"
-    url=f"http://api.openweathermap.org/data/2.5/weather?q={weather_location}&appid={7050ff93230770172103ab380dbcc811}"
+    url=f"http://api.openweathermap.org/data/2.5/weather?q={weather_location}&appid={api_key}"
     response=requests.get(url)
     if response.status_code==200:
         weather_data=response.json()
-       return weather_data
+        return weather_data
     else:
         print("Error retrieving weather data")
         return None
@@ -49,15 +49,15 @@ def store_weather_data(db, weather_data):
 
 def calculate_statistics(weather_data_list):
     temperatures = [data['main']['temp'] for data in weather_data_list]
-         pressures = [data['main']['pressure'] for data in weather_data_list]
+    pressures = [data['main']['pressure'] for data in weather_data_list]
 
-         avg_temperature = sum(temperatures) / len(temperatures)
-         min_temperature = min(temperatures)
-         max_temperature = max(temperatures)
+    avg_temperature = sum(temperatures) / len(temperatures)
+    min_temperature = min(temperatures)
+    max_temperature = max(temperatures)
 
-         avg_pressure = sum(pressures) / len(pressures)
-         min_pressure = min(pressures)
-         max_pressure = max(pressures)
+    avg_pressure = sum(pressures) / len(pressures)
+    min_pressure = min(pressures)
+    max_pressure = max(pressures)
 
     statistics = {
         "avg_temperature": avg_temperature,
@@ -83,7 +83,7 @@ def get_weather():
         return jsonify(statistics)
     else:
         return "No weather data available."
-       
+
 def start_http():
     global listen_port
     if listen_port is None:

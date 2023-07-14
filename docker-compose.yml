@@ -7,8 +7,8 @@ services:
     environment:
       HTTP_PORT: 3333
       DB_NAME: weather_stats
-      UPDATE_INTERVAL=3600
-      WEATHER_LOCATION=46835
+      UPDATE_INTERVAL: 3600
+      WEATHER_LOCATION: 46835
 
     depends_on: [ "mongodb" ]
 
