@@ -3,7 +3,6 @@ from os import environ
 from pymongo import MongoClient
 import requests
 from datetime import datetime, timedelta
-import time
 
 app = Flask(__name__)
 listen_port = environ.get("HTTP_PORT")
@@ -15,7 +14,6 @@ def main():
     weatherdb = connect_database()
     print(f"Database: {weatherdb.name}")
     start_http()
-    update_weather_data(weatherdb)
 
 def connect_database():
     if db_name is None:
@@ -24,12 +22,6 @@ def connect_database():
     client = MongoClient("mongodb", 27017)
     print(client.server_info())
     return client[db_name]
-
-def update_weather_data(db):
-    while True:
-        weather_data=retrieve_weather_data()
-        store_weather_data(db, weather_data)
-        time.sleep(update_interval)
 
 def retrieve_weather_data():
     api_key="7050ff93230770172103ab380dbcc811"
@@ -41,11 +33,6 @@ def retrieve_weather_data():
     else:
         print("Error retrieving weather data")
         return None
-
-def store_weather_data(db, weather_data):
-    if weather_data is not None:
-        collection = db["weather"]
-        collection.insert_one(weather_data)
 
 def calculate_statistics(weather_data_list):
     temperatures = [data['main']['temp'] for data in weather_data_list]
