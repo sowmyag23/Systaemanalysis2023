@@ -9,3 +9,5 @@ Exposes port ‘5001’ to allow external access to flask app
 
 Requirements file contains python packages and versions required for flask application
 Flask(2.0.1), requests(2.26.0) and Werkzeug(2.0.2)  are specified with their versions.
+
+running at [http://localhost](http://localhost:5001/weather?city=Fort%20Wayne)http://localhost:5001/weather?city=Fort%20Wayne
