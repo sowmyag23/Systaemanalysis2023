@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: customdockerfrontend
+    ports:
+      - "8090:5000"
+
+  backend:
+    build:
+      context: .
+      dockerfile: customdockerbackend
+    ports:
+      - "8091:5001"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    ports:
+      - "27020:27017"
+
